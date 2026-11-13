@@ -1,0 +1,10 @@
+{
+  "name": "VIDEX Video Library",
+  "short_name": "VIDEX",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0c10",
+  "theme_color": "#0b0c10",
+  "description": "A personal library for videos you own or are authorized to save.",
+  "icons": []
+}

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0c10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VIDEX">
+<link rel="manifest" href="manifest.webmanifest">
+<title>VIDEX — Video Library</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0c10;--panel:#15171e;--panel2:#1d2029;--line:#2a2e39;--muted:#9ba2b2;--white:#f6f7fb;--accent:#a78bfa;--green:#7ee0b2}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#292044 0%,transparent 55%),var(--bg);color:var(--white);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
+main{max-width:620px;margin:0 auto;padding:24px 0 48px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:1.8px;font-size:19px}.logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#a78bfa,#6d5ce8);display:grid;place-items:center;color:#090910;font-size:20px}.pill{font-size:11px;color:var(--green);border:1px solid #285342;background:#10241d;padding:6px 10px;border-radius:30px}
+h1{font-size:clamp(32px,8vw,48px);line-height:1.03;letter-spacing:-1.7px;margin:0 0 12px}.sub{color:var(--muted);line-height:1.5;margin:0 0 26px}.card{background:linear-gradient(160deg,#191b24,#12141a);border:1px solid var(--line);border-radius:22px;padding:18px;margin:16px 0;box-shadow:0 18px 50px #0003}.label{font-size:11px;letter-spacing:1.3px;color:var(--muted);font-weight:700;margin:0 0 10px;display:block}
+input[type=url],input[type=text]{width:100%;background:#0d0f14;color:var(--white);border:1px solid #343846;border-radius:13px;padding:16px;font-size:15px;outline:none}input:focus{border-color:var(--accent)}
+button,.button{border:0;border-radius:13px;padding:14px 16px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.primary{background:var(--white);color:#11121a;width:100%;margin-top:12px}.secondary{background:#262936;color:var(--white);border:1px solid #383d4c}.row{display:flex;gap:9px;flex-wrap:wrap}.row>*{flex:1}
+.notice{font-size:13px;color:#c0c5d1;line-height:1.55;background:#11131a;border:1px solid var(--line);padding:13px;border-radius:13px;margin-top:13px}
+.result{display:none;margin-top:15px;padding:14px;border-radius:14px;background:#111a17;border:1px solid #285342}.result.show{display:block}.result strong{display:block;margin-bottom:6px}.result p{font-size:13px;line-height:1.5;color:#c0c9c5;margin:0 0 12px}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:26px 2px 12px}.sectionhead h2{font-size:18px;margin:0}.count{color:var(--muted);font-size:12px}
+.tile{display:flex;align-items:center;gap:13px;padding:13px;background:var(--panel);border:1px solid var(--line);border-radius:15px;margin:9px 0}.tileicon{width:42px;height:42px;border-radius:12px;background:var(--panel2);display:grid;place-items:center;font-size:20px}.tiletext{min-width:0;flex:1}.tiletext b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tiletext small{color:var(--muted);font-size:11px}.empty{color:var(--muted);font-size:13px;text-align:center;padding:20px 10px}
+.fileinput{display:none}.foot{color:#747b8b;font-size:11px;text-align:center;line-height:1.6;margin-top:28px}
+a{color:#c4b5fd}.tag{font-size:10px;padding:5px 8px;border-radius:20px;background:#25213a;color:#c4b5fd}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><div class="brand"><div class="logo">▶</div> VIDEX</div><span class="pill">PERSONAL LIBRARY</span></div>
+  <h1>Your videos.<br><span style="color:#b8a5ff">Your library.</span></h1>
+  <p class="sub">Bring together videos you own or have permission to save. Clean, simple, and made for iPhone.</p>
+
+  <section class="card">
+    <label class="label" for="url">PASTE A VIDEO LINK</label>
+    <input id="url" type="url" placeholder="https://…" autocomplete="url" autocapitalize="off">
+    <button class="primary" id="check">Identify link <span>→</span></button>
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="notice">VIDEX supports direct video files and creator-authorized download links. A YouTube or Instagram viewing URL is not itself a downloadable video; use the platform's official download/export option or a file the creator has authorized.</div>
+  </section>
+
+  <section class="card">
+    <label class="label">ADD A VIDEO YOU ALREADY HAVE</label>
+    <p style="color:var(--muted);font-size:13px;line-height:1.5;margin:0 0 13px">Choose a video from Photos or Files. VIDEX can preview it and offer the iPhone share sheet.</p>
+    <input class="fileinput" id="file" type="file" accept="video/*">
+    <button class="secondary" style="width:100%" id="pick">＋ Import from iPhone</button>
+    <div id="fileinfo" class="notice" style="display:none"></div>
+  </section>
+
+  <div class="sectionhead"><h2>My library</h2><span class="count" id="count">0 items</span></div>
+  <div id="library"><div class="empty">Your imported videos will appear here.</div></div>
+  <p class="foot">VIDEX does not bypass platform restrictions, DRM, private-account controls, or creator permissions. Video quality is preserved from the authorized source; this app does not upscale or re-encode videos.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const items=[];
+function safeURL(s){try{const u=new URL(s);return ['https:','http:'].includes(u.protocol)?u:null}catch{return null}}
+function sourceFor(host){host=host.toLowerCase().replace(/^www\./,'');if(host==='youtube.com'||host==='m.youtube.com'||host==='youtu.be'||host.endsWith('.youtube.com'))return 'YouTube';if(host==='instagram.com'||host.endsWith('.instagram.com'))return 'Instagram';return 'direct';}
+function render(){
+ $('count').textContent=items.length+' item'+(items.length===1?'':'s');
+ const lib=$('library');lib.innerHTML='';
+ if(!items.length){lib.innerHTML='<div class="empty">Your imported videos will appear here.</div>';return}
+ [...items].reverse().forEach((it,i)=>{
+  const d=document.createElement('div');d.className='tile';
+  const icon=document.createElement('div');icon.className='tileicon';icon.textContent='▶';
+  const t=document.createElement('div');t.className='tiletext';
+  const b=document.createElement('b');b.textContent=it.name;
+  const sm=document.createElement('small');sm.textContent=it.detail;
+  t.append(b,sm);d.append(icon,t);
+  if(it.url){const a=document.createElement('a');a.href=it.url;a.target='_blank';a.rel='noopener';a.textContent='Open';a.style.fontSize='12px';d.append(a)}
+  lib.append(d);
+ });
+}
+$('check').addEventListener('click',()=>{
+ const raw=$('url').value.trim(),u=safeURL(raw),box=$('result');
+ box.className='result show';
+ if(!u){box.innerHTML='<strong>Enter a valid link</strong><p>Paste a full HTTPS video or authorized download URL.</p>';return}
+ const src=sourceFor(u.hostname);
+ if(src==='YouTube'||src==='Instagram'){
+  const msg=src==='YouTube'
+   ?'This is a YouTube viewing link. Use YouTube’s official download feature where available, or obtain a creator-provided downloadable file. VIDEX cannot extract the stream from this page.'
+   :'This is an Instagram link. Use Instagram’s official download/export options where available, or ask the creator for an authorized media file.';
+  box.innerHTML='<strong>✓ '+src+' link recognized</strong><p>'+msg+'</p><a href="'+u.href+'" target="_blank" rel="noopener">Open in '+src+' ↗</a>';
+  return;
+ }
+ const path=u.pathname.toLowerCase();
+ if(/\.(mp4|mov|m4v|webm)(?:$)/.test(path)){
+  box.innerHTML='<strong>✓ Direct video-file link detected</strong><p>If the host permits access, use the button below to open or save the original file. The source quality is preserved.</p><button class="secondary" id="download">Open video file ↗</button>';
+  $('download').onclick=()=>{const a=document.createElement('a');a.href=u.href;a.target='_blank';a.rel='noopener';a.download='';document.body.appendChild(a);a.click();a.remove()};
+ }else{
+  box.innerHTML='<strong>Link identified</strong><p>This URL is not a recognizable direct video file. If the creator has provided a separate MP4/MOV download link, paste that link instead.</p><a href="'+u.href+'" target="_blank" rel="noopener">Open link ↗</a>';
+ }
+});
+$('pick').addEventListener('click',()=>$('file').click());
+$('file').addEventListener('change',async e=>{
+ const f=e.target.files&&e.target.files[0];if(!f)return;
+ if(!f.type.startsWith('video/'))return;
+ const url=URL.createObjectURL(f);
+ const mb=(f.size/1024/1024).toFixed(1);
+ items.push({name:f.name,detail:mb+' MB · Imported from this iPhone',url});
+ render();
+ const info=$('fileinfo');info.style.display='block';info.innerHTML='';
+ const p=document.createElement('p');p.textContent=f.name+' · '+mb+' MB';info.append(p);
+ const share=document.createElement('button');share.className='secondary';share.textContent='Share / Save video…';info.append(share);
+ share.onclick=async()=>{
+  try{
+   if(navigator.share && navigator.canShare && navigator.canShare({files:[f]})){
+    await navigator.share({files:[f],title:f.name});
+   }else{
+    const a=document.createElement('a');a.href=url;a.download=f.name;a.click();
+    p.textContent='Use the Safari download control to save the file to Files. Photos saving may require opening the downloaded video and using Share → Save Video.';
+   }
+  }catch(err){if(err.name!=='AbortError')p.textContent='Sharing was unavailable. Open the video and use the iPhone Share menu.'}
+ };
+});
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
